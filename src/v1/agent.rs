@@ -4244,6 +4244,10 @@ pub struct SessionCapabilities {
     #[serde_as(deserialize_as = "DefaultOnError")]
     #[serde(default)]
     pub close: Option<SessionCloseCapabilities>,
+    /// Whether the agent supports `session/setTitle`.
+    #[serde_as(deserialize_as = "DefaultOnError")]
+    #[serde(default)]
+    pub set_title: Option<SessionSetTitleCapabilities>,
     /// The _meta property is reserved by ACP to allow clients and agents to attach additional
     /// metadata to their interactions. Implementations MUST NOT make assumptions about values at
     /// these keys.
@@ -4300,6 +4304,13 @@ impl SessionCapabilities {
     #[must_use]
     pub fn close(mut self, close: impl IntoOption<SessionCloseCapabilities>) -> Self {
         self.close = close.into_option();
+        self
+    }
+
+    /// Whether the agent supports `session/setTitle`.
+    #[must_use]
+    pub fn set_title(mut self, set_title: impl IntoOption<SessionSetTitleCapabilities>) -> Self {
+        self.set_title = set_title.into_option();
         self
     }
 
@@ -4481,6 +4492,40 @@ pub struct SessionCloseCapabilities {
 }
 
 impl SessionCloseCapabilities {
+    #[must_use]
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// The _meta property is reserved by ACP to allow clients and agents to attach additional
+    /// metadata to their interactions. Implementations MUST NOT make assumptions about values at
+    /// these keys.
+    ///
+    /// See protocol docs: [Extensibility](https://agentclientprotocol.com/protocol/extensibility)
+    #[must_use]
+    pub fn meta(mut self, meta: impl IntoOption<Meta>) -> Self {
+        self.meta = meta.into_option();
+        self
+    }
+}
+
+/// Capabilities for the `session/setTitle` method.
+///
+/// By supplying `{}` it means that the agent supports setting session titles.
+#[skip_serializing_none]
+#[derive(Default, Debug, Clone, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
+#[non_exhaustive]
+pub struct SessionSetTitleCapabilities {
+    /// The _meta property is reserved by ACP to allow clients and agents to attach additional
+    /// metadata to their interactions. Implementations MUST NOT make assumptions about values at
+    /// these keys.
+    ///
+    /// See protocol docs: [Extensibility](https://agentclientprotocol.com/protocol/extensibility)
+    #[serde(rename = "_meta")]
+    pub meta: Option<Meta>,
+}
+
+impl SessionSetTitleCapabilities {
     #[must_use]
     pub fn new() -> Self {
         Self::default()

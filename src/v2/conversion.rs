@@ -5332,6 +5332,7 @@ impl IntoV1 for super::SessionCapabilities {
             fork,
             resume,
             close,
+            set_title,
             meta,
         } = self;
         Ok(crate::v1::SessionCapabilities {
@@ -5342,6 +5343,7 @@ impl IntoV1 for super::SessionCapabilities {
             fork: fork.into_v1()?,
             resume: resume.into_v1()?,
             close: close.into_v1()?,
+            set_title: set_title.into_v1()?,
             meta: meta.into_v1()?,
         })
     }
@@ -5359,6 +5361,7 @@ impl IntoV2 for crate::v1::SessionCapabilities {
             fork,
             resume,
             close,
+            set_title,
             meta,
         } = self;
         Ok(super::SessionCapabilities {
@@ -5369,6 +5372,7 @@ impl IntoV2 for crate::v1::SessionCapabilities {
             fork: fork.into_v2()?,
             resume: resume.into_v2()?,
             close: close.into_v2()?,
+            set_title: set_title.into_v2()?,
             meta: meta.into_v2()?,
         })
     }
@@ -5483,6 +5487,28 @@ impl IntoV2 for crate::v1::SessionCloseCapabilities {
     fn into_v2(self) -> Result<Self::Output> {
         let Self { meta } = self;
         Ok(super::SessionCloseCapabilities {
+            meta: meta.into_v2()?,
+        })
+    }
+}
+
+impl IntoV1 for super::SessionSetTitleCapabilities {
+    type Output = crate::v1::SessionSetTitleCapabilities;
+
+    fn into_v1(self) -> Result<Self::Output> {
+        let Self { meta } = self;
+        Ok(crate::v1::SessionSetTitleCapabilities {
+            meta: meta.into_v1()?,
+        })
+    }
+}
+
+impl IntoV2 for crate::v1::SessionSetTitleCapabilities {
+    type Output = super::SessionSetTitleCapabilities;
+
+    fn into_v2(self) -> Result<Self::Output> {
+        let Self { meta } = self;
+        Ok(super::SessionSetTitleCapabilities {
             meta: meta.into_v2()?,
         })
     }
